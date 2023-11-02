@@ -25,7 +25,7 @@ export interface ProductSalesCategoryMeasureInterface {
 }
 
 export interface LoginArgs {
-  username: string;
+  email: string;
   password: string;
 }
 

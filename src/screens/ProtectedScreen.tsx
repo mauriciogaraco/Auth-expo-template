@@ -2,15 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, Button ,Pressable, Image, StyleSheet , ScrollView} from 'react-native'
 import FocusAwareStatusBar from '../components/atoms/FocusAwareStatusBar'
 import { StackScreenProps } from '@react-navigation/stack'
-import { stylesCard } from '../components/utils/MyCard'
+import { MyCard, stylesCard } from '../components/utils/MyCard'
 import { stylesRegister } from './LoginScreen'
-import * as Font from 'expo-font'
+import { NavigationProp } from '@react-navigation/native';
 
-interface Props extends StackScreenProps<any,any>{
 
-} 
-export const ProtectedScreen = ({navigation}:Props) => {
-  
+type ProtectedScreenProps = {
+  navigation : NavigationProp<any>
+}
+
+export const ProtectedScreen = ({navigation}:ProtectedScreenProps) =>  {
+  const handleProfilePress = () => {
+    navigation.navigate('PerfilScreen');
+  };
+  const handleNotifPress = () => {
+    navigation.navigate('NotificationScreen');
+  };
+  const handleDetallesfPress = () => {
+    navigation.navigate('DetallesCardScreen');
+  };
   return (
     <View >
          <FocusAwareStatusBar
@@ -23,7 +33,7 @@ export const ProtectedScreen = ({navigation}:Props) => {
       showsVerticalScrollIndicator={false}
     >
         <View style={styles.container}>
-        <Pressable style={styles.btnPerfil} onPress={ ()=> navigation.navigate('PerfilScreen')}>
+        <Pressable style={styles.btnPerfil} onPress={ handleProfilePress}>
             <Image  source={require('../assets/Screenshot_2023-07-15-10-32-16-115_com.facebook.lite.jpg')} 
             style={styles.perfil}  />
         </Pressable>
@@ -32,7 +42,7 @@ export const ProtectedScreen = ({navigation}:Props) => {
         <Text style={styles.userName}>Nombre de usuario</Text>
         </View>
         <View>
-           <Pressable onPress={ ()=> navigation.navigate('NotificationScreen')} style={styles.btnNotif}>
+           <Pressable onPress={ handleNotifPress} style={styles.btnNotif}>
              <Image source={require('../assets/icons8-bell-100.png')} style={{width:20, height:20}}/>
            </Pressable>
         </View>
@@ -43,31 +53,7 @@ export const ProtectedScreen = ({navigation}:Props) => {
 
         </View>
         <View>
-        <View style={stylesCard.container}>
-             <View style={stylesCard.tarjetaContainer} >
-        <Pressable style={stylesCard.btnTargeta1} onPress={()=> navigation.navigate('DetallesCardScreen')} >
-          <View style={stylesCard.logos}>
-              <Text style={stylesCard.textTarjeta}>Ptos</Text>
-              <Image source={require('../assets/images/icon.png')} style={stylesCard.imagenLogo}/>
-          </View>
-         <View style={stylesCard.montoContainer}>
-            <Text style={stylesCard.textMonto}>2,035.90</Text>
-         </View>
-         <View style={stylesCard.detallesContainer}>
-           <View style={stylesCard.fechaContainer}>
-              <Text style={stylesCard.detallesText}>3738..903..890</Text>
-              <Text style={stylesCard.nombreEmpresa}>Tecopos</Text>
-           </View>
-           <View>
-            <Text style={{  color:'white',
-                  fontWeight:'bold',
-                                fontSize:18 }}>11/25</Text>
-           </View>
-         </View>
-        </Pressable>
-      </View>
-     
-     </View> 
+           <MyCard onPress={handleDetallesfPress}  color="#E05E28" number="1234 5678 9101 1121"/>
             
         </View>
         </ScrollView>

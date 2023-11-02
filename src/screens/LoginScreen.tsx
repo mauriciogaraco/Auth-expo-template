@@ -45,7 +45,7 @@ export const LoginScreen = ( {navigation}: Props) => {
     },
   });
   const onSubmit = async (data: any) => {
-    const loginData = { username: data.email, password: data.password };
+    const loginData = { email: data.email, password: data.password };
     await login(loginData)
       .unwrap()
       .catch((res) => {
@@ -96,7 +96,7 @@ export const LoginScreen = ( {navigation}: Props) => {
 
       <View style={stylesRegister.viewContainer}>
         <View style={stylesRegister.formContainer}>
-        
+        <View style={{ marginHorizontal:'auto'}}>
         <TextInputController
               controller={{
                 name: "email",
@@ -154,13 +154,14 @@ export const LoginScreen = ( {navigation}: Props) => {
                 />
               }
             />
+            </View>
             <Button
               style={[styles.btnLogIn]}
               mode="contained"
               buttonColor={palette.primary}
               rippleColor={palette.datesFilter}
               onPress={handleSubmit(onSubmit)}
-              textColor={palette.secondary}
+              textColor={palette.white}
               loading={isSubmitting}
               disabled={(isDirty && !isValid) || isSubmitting || isLoading}
               labelStyle={{
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 280,
-    height:40,
+    height:35,
     backgroundColor: palette.white,
     borderColor: palette.icons,
     borderRadius: 100,
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     paddingLeft:20,
     paddingVertical:5,
     marginVertical:10,
-    marginLeft:50
+    
   },
   btnLogIn: {
     marginTop: 20,

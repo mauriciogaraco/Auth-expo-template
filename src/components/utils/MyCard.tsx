@@ -6,11 +6,48 @@ import { StackScreenProps } from '@react-navigation/stack';
 
  
 const width = Layout.window.width;
+type CardProps = {
+  color: string;
+  number: string;
+  onPress: () => void;
+};
 
 
+ export const MyCard = ({color, number, onPress}:CardProps) =>{
 
+  return(
+    <View style={stylesCard.container}>
+    <View style={stylesCard.tarjetaContainer} >
+<Pressable style={{
+        backgroundColor:color ,
+         width:width * 0.90,
+      height:180,
+      borderRadius:15,
+      marginBottom:20}} onPress={onPress} >
+ <View style={stylesCard.logos}>
+     <Text style={stylesCard.textTarjeta}>Ptos</Text>
+     <Image source={require('../../assets/images/icon.png')} style={stylesCard.imagenLogo}/>
+ </View>
+<View style={stylesCard.montoContainer}>
+   <Text style={stylesCard.textMonto}>2,035.90</Text>
+</View>
+<View style={stylesCard.detallesContainer}>
+  <View style={stylesCard.fechaContainer}>
+     <Text style={stylesCard.detallesText}>{number}</Text>
+     <Text style={stylesCard.nombreEmpresa}>Tecopos</Text>
+  </View>
+  <View>
+   <Text style={{  color:'white',
+         fontWeight:'bold',
+                       fontSize:18 }}>11/25</Text>
+  </View>
+</View>
+</Pressable>
+</View>
 
-
+</View> 
+  )
+ }
 
 
 export const stylesCard = StyleSheet.create({
@@ -19,7 +56,7 @@ export const stylesCard = StyleSheet.create({
       
     },
     btnTargeta1:{
-      backgroundColor: '#E05E28',
+      backgroundColor: 'blue',
       width:width * 0.90,
       height:180,
       borderRadius:15,
