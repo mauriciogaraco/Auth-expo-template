@@ -10,10 +10,15 @@ type CardProps = {
   color: string;
   number: string;
   onPress: () => void;
+  monto:string;
+  vence: string;
+  entidad: string;
+  logo:any
+
 };
 
 
- export const MyCard = ({color, number, onPress}:CardProps) =>{
+ export const MyCard = ({color, number, onPress, monto , vence, entidad, logo}:CardProps) =>{
 
   return(
     <View style={stylesCard.container}>
@@ -26,20 +31,20 @@ type CardProps = {
       marginBottom:20}} onPress={onPress} >
  <View style={stylesCard.logos}>
      <Text style={stylesCard.textTarjeta}>Ptos</Text>
-     <Image source={require('../../assets/images/icon.png')} style={stylesCard.imagenLogo}/>
+     <Image source={logo} style={stylesCard.imagenLogo}/>
  </View>
 <View style={stylesCard.montoContainer}>
-   <Text style={stylesCard.textMonto}>2,035.90</Text>
+   <Text style={stylesCard.textMonto}>{monto}</Text>
 </View>
 <View style={stylesCard.detallesContainer}>
   <View style={stylesCard.fechaContainer}>
      <Text style={stylesCard.detallesText}>{number}</Text>
-     <Text style={stylesCard.nombreEmpresa}>Tecopos</Text>
+     <Text style={stylesCard.nombreEmpresa}>{entidad}</Text>
   </View>
   <View>
    <Text style={{  color:'white',
          fontWeight:'bold',
-                       fontSize:18 }}>11/25</Text>
+                       fontSize:18 }}>{vence}</Text>
   </View>
 </View>
 </Pressable>
@@ -80,7 +85,7 @@ export const stylesCard = StyleSheet.create({
     },
     container:{
       flexDirection:'column',
-      marginTop:50
+      marginTop:10
     },
     imagenLogo:{
       borderRadius:100,

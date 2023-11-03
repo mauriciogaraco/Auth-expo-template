@@ -23,7 +23,7 @@ export const ProtectedScreen = ({navigation}:ProtectedScreenProps) =>  {
   };
   return (
     <View >
-         <FocusAwareStatusBar
+       <FocusAwareStatusBar
       barStyle={"dark-content"}
       backgroundColor="#ffffff"
       translucent={false}
@@ -53,8 +53,17 @@ export const ProtectedScreen = ({navigation}:ProtectedScreenProps) =>  {
 
         </View>
         <View>
-           <MyCard onPress={handleDetallesfPress}  color="#E05E28" number="1234 5678 9101 1121"/>
-            
+           <MyCard onPress={handleDetallesfPress} 
+            color="#E05E28" number="1234 5678 9101 1121" monto='3434.11'
+             entidad='TecoPos' vence='11/25' logo={require('../assets/images/icon.png')}/>
+
+           <MyCard onPress={handleDetallesfPress}  color="#be0f0f" 
+           number="1234 5678 9101 1121" monto='3434.11'
+            entidad='Aceña' vence='11/25' logo={require('../assets/images/aceñaLogo.jpeg')}/>
+           
+           <MyCard onPress={handleDetallesfPress}  
+           color="#33B5D3" number="2356 0925 9101 2533" monto='3434.11'
+            entidad='Gelato' vence='11/25' logo={require('../assets/images/icon.png')}/>
         </View>
         </ScrollView>
     </View>
@@ -115,6 +124,7 @@ const styles = StyleSheet.create({
   fontSize:18,
   fontWeight:'bold',
   marginHorizontal:20,
-  top:30
+  top:30,
+  marginBottom:50
  }
 })
