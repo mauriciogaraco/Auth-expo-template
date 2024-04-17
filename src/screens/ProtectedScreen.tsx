@@ -62,6 +62,7 @@ export const ProtectedScreen = ({ navigation }: ProtectedScreenProps) => {
         <View style={{ backgroundColor: "#2b2b5e", width: 200, height: 200 }}>
           <Text>Category: {item.category}</Text>
           <Text>description: {item.description}</Text>
+          <Text>email: {item.email}</Text>
         </View>
       </View>
     );
