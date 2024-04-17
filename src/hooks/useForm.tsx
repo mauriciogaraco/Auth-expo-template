@@ -1,17 +1,17 @@
 import { useState } from "react";
 
-export const useForm =<T extends Object> (initialState : T) => {
-const [state, setstate] = useState(initialState);
+export const useForm = (second = {}) => {
+  const [value, setvalue] = useState(second);
+  const reset = () => {
+    setvalue(second);
+  };
 
-const onChange = (value: string, field: keyof T) => {
-    setstate({
-        ...state,
-        [field]:value
+  //@ts-ignore
+  const handelInputChange = ({ target }) => {
+    setvalue({
+      ...value,
+      [target.name]: target.value,
     });
-}
-    return{
-        ...state,
-        form:state,
-        onChange
-    }
-}
+  };
+  return [value, handelInputChange, reset];
+};

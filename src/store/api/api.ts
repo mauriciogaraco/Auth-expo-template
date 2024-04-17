@@ -26,7 +26,7 @@ const axiosBaseQuery: BaseQueryFn<AxiosArgs, unknown, unknown> = async ({
   }
   try {
     const result = await axios.axiosApiInstance({
-      url: `${baseUrl}${api_configs.BASE_API_URL}${url}`,
+      url: `${baseUrl}${url}`,
       method: method || "GET",
       data,
       params,

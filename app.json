@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "tecopay-app",
-    "slug": "tecopay-app",
+    "name": "support-dissau-app",
+    "slug": "support-dissau-app",
     "version": "1.0.0",
-    "owner": "tecopay",
+    "owner": "dissau",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,22 +22,15 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ]
+      }
+   
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
-        }
-      ]
+     
+      
     ],
     "extra": {
       "eas": {

@@ -1,35 +1,39 @@
-import React ,{useContext, useState} from 'react'
 import { Fontisto, Ionicons } from "@expo/vector-icons";
 
-import { View, TouchableOpacity, Text, KeyboardAvoidingView, Platform, 
-  ScrollView, StyleSheet, Image,} from 'react-native'
-  import { TextInput, Button } from "react-native-paper";
-import { TecoLogo } from '../components/TecoLogo'
-import { loginStyles } from '../theme/loginTheme'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Image,
+} from "react-native";
+import { Button, TextInput } from "react-native-paper";
+
 import { validateEmail } from "../utils/validation";
-import { StackScreenProps } from '@react-navigation/stack';
-import Layout from '../components/utils/Layout';
-import { palette } from '../theme/colors';
+import { StackScreenProps } from "@react-navigation/stack";
+import Layout from "../components/utils/Layout";
+import { palette } from "../theme/colors";
 //import TextInputController from '../components/atoms/formControls/TextInputController';
-import FocusAwareStatusBar from '../components/atoms/FocusAwareStatusBar';
-import Formulario from '../components/utils/Formulario'
-import FormularioRegister from '../components/utils/FormularioRegister'
-import { IconButton } from 'react-native-paper'
-import { useLoginMutation } from '../store/api/authApi'
-import Toast from 'react-native-toast-message'
-import { useForm } from 'react-hook-form'
-import TextInputController from '../components/atoms/formControls/TextInputController'
+
+import { useLoginMutation } from "../store/api/authApi";
+import Toast from "react-native-toast-message";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import React from "react";
+import FocusAwareStatusBar from "../components/atoms/FocusAwareStatusBar";
+import TextInputController from "../components/atoms/formControls/TextInputController";
+import { loginStyles } from "../theme/loginTheme";
+
 //import { AuthContext } from '../../Redux/authContext'
 
-interface Props extends StackScreenProps<any,any>{
-
-}
+interface Props extends StackScreenProps<any, any> {}
 
 const width = Layout.window.width;
 
-export const LoginScreen = ( {navigation}: Props) => {
- 
-  
+export const LoginScreen = ({ navigation }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
 
@@ -58,102 +62,100 @@ export const LoginScreen = ( {navigation}: Props) => {
         });
       });
   };
-         
-  const pressEye = () => {
-    if(!showPassword){
-     setShowPassword(true);
-    }
-    else{
-      setShowPassword(false);
 
+  const pressEye = () => {
+    if (!showPassword) {
+      setShowPassword(true);
+    } else {
+      setShowPassword(false);
     }
-  }
-        
+  };
+
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === "android" ? "height" : "padding"}
-    style={{ flex: 1 }}
-  >
-    <FocusAwareStatusBar
-      barStyle={"dark-content"}
-      backgroundColor="#023E88"
-      translucent={false}
-    />
-    <ScrollView
-      style={stylesRegister.scrollViewContainer}
-      showsVerticalScrollIndicator={false}
+      behavior={Platform.OS === "android" ? "height" : "padding"}
+      style={{ flex: 1 }}
     >
-      <View style={stylesRegister.containerStyle}>
-        <View style={stylesRegister.sliderContainerStyle}>
-          <Image
-            source={require("../assets/logo-w.png")}
-            resizeMode="contain"
-            resizeMethod="resize"
-            style={stylesRegister.logo}
-          />
+      <FocusAwareStatusBar
+        barStyle={"dark-content"}
+        backgroundColor="#023E88"
+        translucent={false}
+      />
+      <ScrollView
+        style={stylesRegister.scrollViewContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={stylesRegister.containerStyle}>
+          <View style={stylesRegister.sliderContainerStyle}>
+            <Image
+              source={require("../assets/logo-w.png")}
+              resizeMode="contain"
+              resizeMethod="resize"
+              style={stylesRegister.logo}
+            />
+          </View>
         </View>
-      </View>
 
-      <View style={stylesRegister.viewContainer}>
-        <View style={stylesRegister.formContainer}>
-        <View style={{ marginHorizontal:'auto'}}>
-        <TextInputController
-              controller={{
-                name: "email",
-                rules: {
-                  required: {
-                    value: true,
-                    message: "Correo electrónico requerido",
+        <View style={stylesRegister.viewContainer}>
+          <View style={stylesRegister.formContainer}>
+            <View style={{ marginHorizontal: "auto" }}>
+              <TextInputController
+                controller={{
+                  name: "email",
+                  rules: {
+                    required: {
+                      value: true,
+                      message: "Correo electrónico requerido",
+                    },
+                    validate: { validateEmail },
                   },
-                  validate: { validateEmail },
-                },
-                control: control as any,
-              }}
-              style={styles.input}
-              placeholder="Correo electr&oacute;nico"
-              dense
-              textColor={palette.secondary}
-              autoCapitalize={"none"}
-              keyboardType="email-address"
-              returnKeyType="next"
-              onSubmitEditing={() => setFocus("password")}
-              right={
-                <TextInput.Icon
-                  icon={() => (
-                    <Fontisto name="email" size={22} color="#c1c1c1" />
-                  )}
-                  color={(isTextInputFocused) => "#c1c1c1"}
-                />
-              }
-            />
-            <TextInputController
-              controller={{
-                name: "password",
-                control: control as any,
-                rules: {
-                  required: { value: true, message: "Contraseña requerida" },
-                },
-              }}
-              style={styles.input}
-              placeholder="Contrase&ntilde;a"
-              dense
-              secureTextEntry={showPassword ? false : true}
-              returnKeyType="done"
-              onSubmitEditing={() => handleSubmit(onSubmit)()}
-              right={
-                <TextInput.Icon
-                  icon={() => (
-                    <Ionicons
-                      name={showPassword ? "eye-off-outline" : "eye-outline"}
-                      size={24}
-                      color={palette.icons}
-                    />
-                  )}
-                  color={(isTextInputFocused) => "#c1c1c1"}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              }
-            />
+                  control: control as any,
+                }}
+                style={styles.input}
+                placeholder="Correo electr&oacute;nico"
+                dense
+                textColor={palette.secondary}
+                autoCapitalize={"none"}
+                keyboardType="email-address"
+                returnKeyType="next"
+                onSubmitEditing={() => setFocus("password")}
+                right={
+                  <TextInput.Icon
+                    icon={() => (
+                      <Fontisto name="email" size={22} color="#c1c1c1" />
+                    )}
+                    color={(isTextInputFocused) => "#c1c1c1"}
+                  />
+                }
+              />
+              <TextInputController
+                controller={{
+                  name: "password",
+                  control: control as any,
+                  rules: {
+                    required: { value: true, message: "Contraseña requerida" },
+                  },
+                }}
+                style={styles.input}
+                placeholder="Contrase&ntilde;a"
+                dense
+                secureTextEntry={showPassword ? false : true}
+                returnKeyType="done"
+                onSubmitEditing={() => handleSubmit(onSubmit)()}
+                right={
+                  <TextInput.Icon
+                    icon={() => (
+                      <Ionicons
+                        name={showPassword ? "eye-off-outline" : "eye-outline"}
+                        size={24}
+                        color={palette.icons}
+                      />
+                    )}
+                    color={(isTextInputFocused) => "#c1c1c1"}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
+              />
             </View>
             <Button
               style={[styles.btnLogIn]}
@@ -171,23 +173,27 @@ export const LoginScreen = ( {navigation}: Props) => {
             >
               {isSubmitting ? "Iniciando sesión" : "Iniciar Sesión"}
             </Button>
-        <View style={loginStyles.newUserContainer}>
-              <Text>¿ No Tienes Cuenta ?
-              </Text>
-             <TouchableOpacity activeOpacity={0.8} onPress={ ()=> navigation.replace('RegisterScreen')}>
-               <Text style={loginStyles.btnRegisterText}> Registrate Aquí</Text>
-             </TouchableOpacity>
-          </View>  
+            <View style={loginStyles.newUserContainer}>
+              <Text>¿ No Tienes Cuenta ?</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => navigation.replace("RegisterScreen")}
+              >
+                <Text style={loginStyles.btnRegisterText}>
+                  {" "}
+                  Registrate Aquí
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-      <View style={{ height: 100 }} />
-    </ScrollView>
-  </KeyboardAvoidingView>
+        <View style={{ height: 100 }} />
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+};
 
-  )
-}
-
- export const stylesRegister = StyleSheet.create({
+export const stylesRegister = StyleSheet.create({
   scrollViewContainer: {
     backgroundColor: "#fff",
   },
@@ -242,7 +248,7 @@ export const LoginScreen = ( {navigation}: Props) => {
     justifyContent: "center",
     // backgroundColor: "#3425ad",
   },
- 
+
   btnLogIn: {
     marginTop: 20,
     width: 240,
@@ -250,8 +256,6 @@ export const LoginScreen = ( {navigation}: Props) => {
   },
 });
 const styles = StyleSheet.create({
- 
-  
   viewContainer: {
     marginRight: 40,
     marginLeft: 40,
@@ -272,19 +276,17 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     alignItems: "center",
     justifyContent: "center",
-    
   },
   input: {
     width: 280,
-    height:35,
+    height: 35,
     backgroundColor: palette.white,
     borderColor: palette.icons,
     borderRadius: 100,
-    borderWidth:2,
-    paddingLeft:20,
-    paddingVertical:5,
-    marginVertical:10,
-    
+    borderWidth: 2,
+    paddingLeft: 20,
+    paddingVertical: 5,
+    marginVertical: 10,
   },
   btnLogIn: {
     marginTop: 20,
@@ -292,5 +294,3 @@ const styles = StyleSheet.create({
     // height: 50,
   },
 });
-
-

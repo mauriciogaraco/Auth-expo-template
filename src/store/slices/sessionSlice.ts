@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {  User } from "../../services/Interfaces";
 import { authApi } from "../api/authApi";
 import { RootState } from "../root";
-import { closeSession, refreshSession } from "./systemSlice";
+import { closeSession,} from "./systemSlice";
 
 
 
@@ -32,9 +32,7 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(closeSession, () => initialState)
-      .addCase(refreshSession, (state) => {
-        state.isAuth = true;
-      })
+     
       .addMatcher(
         authApi.endpoints.getUser.matchFulfilled,
         (state, { payload }) => {
@@ -59,6 +57,7 @@ const slice = createSlice({
         authApi.endpoints.login.matchFulfilled,
         (state, {payload}) => {
           state.isAuth = payload;
+          
         }
       )
       .addMatcher(authApi.endpoints.logout.matchFulfilled, () => initialState)

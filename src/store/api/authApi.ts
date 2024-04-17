@@ -2,13 +2,14 @@
 import { api } from "./api";
 import { closeSession, setSessionTokens } from "../slices/systemSlice";
 import {
-  Area,
-  AuthToken,
+ 
+  TicketResponse,
   User,
 
 
 } from "../../services/Interfaces";
 import { RootState } from "../root";
+import { AuthToken } from '../../services/Interfaces';
 import {
   EditUserDataInterface,
   GlobalDataInterface,
@@ -23,14 +24,17 @@ export const authApi = api.injectEndpoints({
         async queryFn(arg, { dispatch }, extraOptions, baseQuery) {
           try {
             const authToken = await baseQuery({
-              url:   "/identity/login",
+              url:   "/user/login",
               method: "POST",
               data: arg,
             });
             if (authToken.data) {
-              const tokens = authToken.data as AuthToken;
-              dispatch(setSessionTokens(tokens));
+             // const tokens = authToken.data as AuthToken;
+             const sessiontoken = authToken.data 
+              dispatch(setSessionTokens(authToken.data));
+            
               return { data: true };
+
             }
             return { error: authToken.error };
           } catch (error) {
@@ -74,82 +78,7 @@ export const authApi = api.injectEndpoints({
         queryFn: () => ({ data: null })
        
       }) ,
-      /* 
-      loadBusinessData: build.query<Partial<GlobalDataInterface>, void>({
-        async queryFn(arg, { getState }, extraOptions, baseQuery) {
-          const state = getState() as RootState;
-          const branch = state.business.currentBranch;
-          return await Promise.all([
-            baseQuery({
-              url: `/security/user`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/administration/my-business`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/administration/my-branches`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/administration/area?isActive=true&all_data=true`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/administration/productcategory`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/administration/salescategory`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/administration/measures`,
-              method: "GET",
-            }),
-            baseQuery({
-              url: `/sales/statusorder`,
-              method: "GET",
-            }),
-          ])
-            .then((res) => {
-              if (branch) {
-                return {
-                  data: {
-                    // user: res[0]?.data as User,
-                    business: res[1]?.data as Business,
-                    // branches: res[2]?.data as Branch[],
-                    areas: res[3]?.data as PaginatedResponse<Area>,
-                    productCategory: res[4]
-                      ?.data as PaginatedResponse<ProductCategory>,
-                    salesCategory: res[5]
-                      ?.data as PaginatedResponse<SalesCategory>,
-                    measures: res[6]?.data as Array<MeasureInterface>,
-                    orderStatus: res[7]?.data as Array<any>,
-                  },
-                };
-              } else {
-                return {
-                  data: {
-                    user: res[0]?.data as User,
-                    business: res[1]?.data as Business,
-                    branches: res[2]?.data as Branch[],
-                    areas: res[3]?.data as PaginatedResponse<Area>,
-                    productCategory: res[4]
-                      ?.data as PaginatedResponse<ProductCategory>,
-                    salesCategory: res[5]
-                      ?.data as PaginatedResponse<SalesCategory>,
-                    measures: res[6]?.data as Array<MeasureInterface>,
-                    orderStatus: res[7]?.data as Array<any>,
-                  },
-                };
-              }
-            })
-            .catch((err) => ({ error: err }));
-        },
-        providesTags: ["Session"],
-      }), */
+    
       getUser: build.query({
         query: () => ({
           url: `/identity/security/user`,
@@ -157,6 +86,15 @@ export const authApi = api.injectEndpoints({
         }),
         providesTags: ["User"],
       }),
+
+      getAllTickets: build.query<TicketResponse, void>({
+        query: () => ({
+          url: `/ticket/all`,
+          method: "GET",
+        }),
+        providesTags: ["User"],
+      }),
+
     /*  getBusiness: build.query<Business, void>({
         query: () => ({
           url: `/administration/my-business`,
@@ -198,7 +136,7 @@ export const authApi = api.injectEndpoints({
 
 export const {
   useLoginMutation,
-  
+  useGetAllTicketsQuery,
   useLogoutMutation,
   useRefreshTokenMutation,
   useEditUserMutation,

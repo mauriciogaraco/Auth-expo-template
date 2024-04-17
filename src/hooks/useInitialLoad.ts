@@ -1,30 +1,26 @@
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
-import * as Localization from "expo-localization";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import i18n from "i18n-js";
+
 import { AxiosError, AxiosResponse } from "axios";
 import * as Application from "expo-application";
 import { Platform } from "react-native";
 import semver from "semver";
 
 //Firebase
-import crashlytics from "@react-native-firebase/crashlytics";
-import messaging from "@react-native-firebase/messaging";
 
-import englishLanguage from "../i18n/english.json";
-import spanishLanguage from "../i18n/spanish.json";
 import APIServer from "../services/APIServer";
 import { PublicConfigs, AuthToken } from "../services/Interfaces";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { closeSession, refreshSession } from "../store/slices/systemSlice";
+import { closeSession } from "../store/slices/systemSlice";
 
 export const useInitialLoad = () => {
   const [error, setError] = useState<string | boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const state = useAppSelector((state) => state.system.sessionTokens);
+  const state = useAppSelector((state) => state.system.sessiontoken?.token);
   const dispatch = useAppDispatch();
   const [needUpdate, setNeedUpdate] = useState(false);
   const [storeUrl, setStoreUrl] = useState<string>("");
@@ -68,8 +64,8 @@ export const useInitialLoad = () => {
           setError(
             `Opps... ha ocurrido un error. Por favor, vuelva a intentarlo y si el problema persiste contáctenos.`
           );
-          crashlytics().log("Loading app configurations");
-          crashlytics().recordError(error);
+         // crashlytics().log("Loading app configurations");
+        //  crashlytics().recordError(error);
           setIsLoading(false);
           notContinue = true;
         });
@@ -123,23 +119,7 @@ export const useInitialLoad = () => {
         }
       }
 
-      //Configuring notifications
-      try {
-        const authorizationStatus = await messaging().requestPermission();
-        if (
-          authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-        ) {
-          let fcmToken = await messaging().getToken();
-
-          await APIServer.patch(`/security/user`, {
-            notificationToken: fcmToken,
-          });
-        }
-      } catch (error: any) {
-        crashlytics().log("Something fail while getting notification Token");
-        crashlytics().recordError(error);
-      }
+     
 
       //Checking user credentials
       setMessage("Comprobando credenciales de acceso...");
@@ -148,41 +128,23 @@ export const useInitialLoad = () => {
         const session = state;
         // console.log("session", session);
         if (session !== null) {
-          const { refresh_token }: AuthToken = session;
-          // console.log("refresh_token", refresh_token);
-          await APIServer.post(`/security/refresh-token`, {
-            refresh_token,
-          })
-            .then(async (response: AxiosResponse) => {
-              // console.log("token refreshed");
-              const refreshedTokens = {
-                token: response.data.token,
-                refresh_token: response.data.refresh_token,
-              };
-              dispatch(refreshSession(refreshedTokens));
-            })
-            .catch((error: AxiosError) => {
-              // console.log("error", JSON.stringify(error));
-              // console.log("error while trying to refresh token");
-              if (error?.response?.status === 400) {
-                dispatch(closeSession());
-              } else {
+         
                 // console.log("error", JSON.stringify(error));
                 // console.log("error", error.cause);
                 setError(
                   "Upps.. No hemos podido verificar sus credenciales de acceso."
                 );
               }
-            });
-        }
+          
+        
       } catch (error: any) {
         dispatch(closeSession());
-        crashlytics().log("While checking access credentials");
-        crashlytics().recordError(error);
+      //  crashlytics().log("While checking access credentials");
+     //   crashlytics().recordError(error);
       }
     } catch (error: any) {
-      crashlytics().log("While loading app configurations");
-      crashlytics().recordError(error);
+   //   crashlytics().log("While loading app configurations");
+   //   crashlytics().recordError(error);
       setError("Opps.. Sorry, something has broken. Please try again.");
     } finally {
       setIsLoading(false);

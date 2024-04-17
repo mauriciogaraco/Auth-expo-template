@@ -7,7 +7,7 @@ import { AuthToken } from "./Interfaces";
 import { api_configs } from "../config/system_config";
 import { closeSession, setSessionTokens } from "../store/slices/systemSlice";
 
-const no_authentication = ["/identity/login", "/identity/refresh-token"];
+const no_authentication = ["/user/login"];
 
 //const no_include_business = ["/administration/my-branches"];
 
@@ -20,31 +20,28 @@ export const injectStore = (_store: any) => {
 
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
+  
   async (config: any) => {
+    const session = store.getState().system.token;
     config.headers = {
-      "X-app-origin": "Tecopos-Tecopay",
+      "x-token": `${session}`,
+      'Content-Type': 'application/json',
     };
 
-   // const activeBranchId: number = store.getState().business.currentBranch;
-    const session = store.getState().system.sessionTokens;
+  //  const session = store.getState().system.sessionTokens;
     let base_url = api_configs.BASE_URL;
 
     const rute =
-      config.url?.split(`${base_url}${api_configs.BASE_API_URL}`)[1] ?? "";
+      config.url?.split(`${base_url}`)[1] ?? "";
 
- /*   if (activeBranchId !== null && !no_include_business.includes(rute)) {
-      config.headers = {
-        ...config.headers,
-        "X-App-BusinessId": activeBranchId,
-      };
-    }*/
 
-    if (session !== null && !no_authentication.includes(rute)) {
+
+ /*   if (session !== null && !no_authentication.includes(rute)) {
       config.headers = {
         ...config.headers,
         Authorization: `Bearer ${session?.token}`,
       };
-    }
+    }*/
 
     return config;
   },
@@ -72,36 +69,7 @@ axiosApiInstance.interceptors.response.use(
       originalRequest._retry = true;
       const session = store.getState().system.sessionTokens;
 
-      if (session) {
-        const { refresh_token }: AuthToken = session;
-        try {
-          await axios
-            .post(
-              `${base_url}${api_configs.BASE_API_URL}/identity/refresh-token`,
-              { refresh_token }
-            )
-            .then(async (response: AxiosResponse) => {
-              const new_session = {
-                token: response.data.token,
-                refresh_token: response.data.refresh_token,
-              };
-              store.dispatch(setSessionTokens(new_session));
-
-              axiosApiInstance.defaults.headers.common["Authorization"] =
-                "Bearer " + response.data.token;
-              return axiosApiInstance(originalRequest);
-            })
-            // Reset all de store data when token refresh fails
-            .catch(async (error) => {
-              // console.log("error post ===> ", JSON.stringify(error));
-              store.dispatch(closeSession());
-              return Promise.reject(error);
-            });
-        } catch (e) {
-          store.dispatch(closeSession());
-          return Promise.reject(e);
-        }
-      }
+    
     }
     return Promise.reject(error);
   }
@@ -116,7 +84,7 @@ const get = async (path: string): Promise<AxiosResponse<object>> => {
   }
 
   const request = {
-    url: `${base_url}${api_configs.BASE_API_URL}${path}`,
+    url: `${base_url}${path}`,
     method: "GET",
   };
 
@@ -135,7 +103,7 @@ const post = async (
   }
 
   const request = {
-    url: `${base_url}${api_configs.BASE_API_URL}${path}`,
+    url: `${base_url}${path}`,
     method: "POST",
   };
 
@@ -154,7 +122,7 @@ const put = async (
   }
 
   const request = {
-    url: `${base_url}${api_configs.BASE_API_URL}${path}`,
+    url: `${base_url}${path}`,
     method: "PUT",
   };
 
@@ -173,7 +141,7 @@ const patch = async (
   }
 
   const request = {
-    url: `${base_url}${api_configs.BASE_API_URL}${path}`,
+    url: `${base_url}${path}`,
     method: "PATCH",
   };
 
@@ -192,7 +160,7 @@ const deleteAPI = async (
   }
 
   const request = {
-    url: `${base_url}${api_configs.BASE_API_URL}${path}`,
+    url: `${base_url}${path}`,
     method: "DELETE",
   };
 

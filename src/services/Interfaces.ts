@@ -5,6 +5,27 @@ export interface User {
   name:string
   id: string
 }
+export interface Ticket {
+  
+    _id: string,
+    title: string,
+    username: string,
+    email: string,
+    description: string,
+    category: string,
+    status: "COMPLETED" | "UNCOMPLETED",
+    user: {
+        _id: string,
+        name: string
+    }
+
+}
+export interface TicketResponse {
+  
+    total: number,
+  items: Ticket[]
+}
+
 
 export interface AuthToken {
   token: string;
