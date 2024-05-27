@@ -1,29 +1,32 @@
-import React from 'react'
-import {Linking, View} from 'react-native'
-import MainNavigatior from './MainNavigator'
-import { useInitialLoad } from './src/hooks/useInitialLoad';
-//import { useAppDispatch } from './Redux/hooks';
+import React, { ErrorInfo, useContext } from "react";
+import { Linking, View } from "react-native";
+
+//import crashlytics from "@react-native-firebase/crashlytics";
 import {
   ErrorBoundary,
   ErrorBoundaryPropsWithFallback,
   FallbackProps,
 } from "react-error-boundary";
-import { ThemeContext } from './src/Context/theme/ThemeContext';
+import { ThemeContext } from "./src/Context/theme/ThemeContext";
 //import SpInAppUpdates, { IAUUpdateKind } from "sp-react-native-in-app-updates"
-import { LoadingPage } from './src/components/containers/LoadingPage';
-import { ErrorPage } from './src/components/containers/ErrorPage';
-import { EmptyData } from './src/components/containers/EmptyData';
-import MainNavigator from './MainNavigator';
+import { LoadingPage } from "./src/components/containers/LoadingPage";
+import { ErrorPage } from "./src/components/containers/ErrorPage";
+import { EmptyData } from "./src/components/containers/EmptyData";
+import { useInitialLoad } from "./src/hooks/useInitialLoad";
+import CustomToast from "./src/components/atoms/CustomToast";
 
-
-
-
-
-
+import { useFonts } from "expo-font";
+import { MainNavigator } from "./src/routes/MainNavigator";
 
 export default function AppEntry() {
-   //Initial Load
- /*  const {
+  const [fontsLoaded] = useFonts({
+    "Poppins-Light": require("./assets/fonts/Poppins-Light.ttf"),
+    "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
+    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+  });
+
+  //Initial Load
+  const {
     isLoading,
     error,
     loadHandler,
@@ -32,21 +35,20 @@ export default function AppEntry() {
     isInMaintenance,
     isInAppUpdate,
   } = useInitialLoad();
-  const dispatch = useAppDispatch();
-*/
+  // const dispatch = useAppDispatch();
 
- /* //Configuring inAppUpdate
-  const dispatchInAppUpdate = () => {
+  //Configuring inAppUpdate
+  /* const dispatchInAppUpdate = () => {
     try {
       const inAppUpdates = new SpInAppUpdates(false);
       inAppUpdates.startUpdate({
         updateType: IAUUpdateKind.IMMEDIATE,
       });
     } catch (error: any) {
-      crashlytics().log("While excecuting inAppUpdate");
-      crashlytics().recordError(error);
+      // crashlytics().log("While excecuting inAppUpdate");
+      // crashlytics().recordError(error);
     }
-  };
+  };*/
 
   const { theme } = useContext(ThemeContext);
 
@@ -60,10 +62,12 @@ export default function AppEntry() {
     );
   };
 
-  const logError = (error: Error, info: { componentStack: string }) => {
+  const logError = (error: Error, info: ErrorInfo) => {
+    console.log("error", error);
     // Do something with the error, e.g. log to an external API
-    crashlytics().log(info.componentStack);
-    crashlytics().recordError(error);
+    //@ts-ignore
+    // crashlytics().log(info.componentStack);
+    // crashlytics().recordError(error);
   };
   // useEffect(() => {
   //   const removeNetInfoSubscription = NetInfo.addEventListener(state => {
@@ -95,7 +99,7 @@ export default function AppEntry() {
 
   if (needUpdate) {
     if (isInAppUpdate) {
-      dispatchInAppUpdate();
+      // dispatchInAppUpdate();
     }
 
     return (
@@ -108,21 +112,18 @@ export default function AppEntry() {
         />
       </View>
     );
-  }*/
+  }
 
   return (
     <View style={{ flex: 1 }}>
-    {/*  <ErrorBoundary
+      <ErrorBoundary
         FallbackComponent={Fallback}
         onReset={loadHandler}
         onError={logError}
-  >*/}
+      >
         <MainNavigator />
-        
-    
+        <CustomToast />
+      </ErrorBoundary>
     </View>
   );
 }
-/*<View>
-       <MainNavigatior/>
-    </View>*/

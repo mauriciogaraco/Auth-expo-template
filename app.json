@@ -1,9 +1,8 @@
 {
   "expo": {
-    "name": "support-dissau-app",
-    "slug": "support-dissau-app",
+    "name": "dissau-support-app",
+    "slug": "dissau-support-app",
     "version": "1.0.0",
-    "owner": "dissau",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,19 +21,15 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
-   
+      },
+      "package": "com.mauriciogaraco.dissausupportapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-     
-      
-    ],
     "extra": {
       "eas": {
-        "projectId": "7f5b78ab-06de-4cd8-b39f-a6dad70ce6bd"
+        "projectId": "88edcaa8-d027-4e6b-adbc-d74875d96402"
       }
     }
   }

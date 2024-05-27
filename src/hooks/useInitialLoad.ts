@@ -1,26 +1,31 @@
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import * as Font from "expo-font";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+// import * as Font from "expo-font";
+//import * as Localization from "expo-localization";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+//import i18n from "i18n-js";
 import { AxiosError, AxiosResponse } from "axios";
-import * as Application from "expo-application";
-import { Platform } from "react-native";
-import semver from "semver";
+// import * as Application from "expo-application";
+// import { Platform } from "react-native";
+// import semver from "semver";
 
 //Firebase
+//import crashlytics from "@react-native-firebase/crashlytics";
+// import messaging from "@react-native-firebase/messaging";
 
+//import englishLanguage from "../i18n/english.json";
+//import spanishLanguage from "../i18n/spanish.json";
 import APIServer from "../services/APIServer";
 import { PublicConfigs, AuthToken } from "../services/Interfaces";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { closeSession } from "../store/slices/systemSlice";
+import { closeSession, refreshSession } from "../store/slices/systemSlice";
+import { current } from "@reduxjs/toolkit";
 
 export const useInitialLoad = () => {
   const [error, setError] = useState<string | boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const state = useAppSelector((state) => state.system.sessiontoken?.token);
+  const state = useAppSelector((state) => state.system.sessionTokens);
   const dispatch = useAppDispatch();
   const [needUpdate, setNeedUpdate] = useState(false);
   const [storeUrl, setStoreUrl] = useState<string>("");
@@ -41,110 +46,152 @@ export const useInitialLoad = () => {
       // i18n.fallbacks = true;
 
       // Load fonts
-      await Font.loadAsync({
-        ...Ionicons.font,
-        "poppins-300": require("../../assets/fonts/Poppins-Light.ttf"),
-        "poppins-medium": require("../../assets/fonts/Poppins-Medium.ttf"),
-        "poppins-bold": require("../../assets/fonts/Poppins-Bold.ttf"),
-        "sf-300": require("../../assets/fonts/SFProDisplay-Light-1.ttf"),
-        "sf-medium": require("../../assets/fonts/SFProDisplay-Medium-1.ttf"),
-        "sf-bold": require("../../assets/fonts/SFProDisplay-Heavy-1.ttf"),
-      });
+      // await Font.loadAsync({
+      //   ...Ionicons.font,
+      //   "poppins-300": require("../../assets/fonts/Poppins-Light.ttf"),
+      //   "poppins-medium": require("../../assets/fonts/Poppins-Medium.ttf"),
+      //   "poppins-bold": require("../../assets/fonts/Poppins-Bold.ttf"),
+      //   "sf-300": require("../../assets/fonts/SFProDisplay-Light-1.ttf"),
+      //   "sf-medium": require("../../assets/fonts/SFProDisplay-Medium-1.ttf"),
+      //   "sf-bold": require("../../assets/fonts/SFProDisplay-Heavy-1.ttf"),
+      // });
 
       //System Configurations
       let notContinue = false;
 
-      setMessage("Cargando configuraciones...");
-      let localConfigs: Array<PublicConfigs>;
-      await APIServer.get(`/public/configs`)
-        .then((resp: AxiosResponse) => {
-          localConfigs = resp.data;
-        })
-        .catch((error) => {
-          setError(
-            `Opps... ha ocurrido un error. Por favor, vuelva a intentarlo y si el problema persiste contáctenos.`
-          );
-         // crashlytics().log("Loading app configurations");
-        //  crashlytics().recordError(error);
-          setIsLoading(false);
-          notContinue = true;
-        });
+      // setMessage("Cargando configuraciones...");
+      // let localConfigs: Array<PublicConfigs>;
+      // await APIServer.get(`/public/configs`)
+      //   .then((resp: AxiosResponse) => {
+      //     localConfigs = resp.data;
+      //   })
+      //   .catch((error) => {
+      //     setError(
+      //       `Opps... ha ocurrido un error. Por favor, vuelva a intentarlo y si el problema persiste contáctenos.`
+      //     );
+      //     crashlytics().log("Loading app configurations");
+      //     crashlytics().recordError(error);
+      //     setIsLoading(false);
+      //     notContinue = true;
+      //   });
 
-      if (notContinue) return;
+      // if (notContinue) return;
 
       //Checking Maintenance
-      const is_in_maitenance =
-        localConfigs!.find((item) => item.key === "is_maintenance_management")
-          ?.value === "true";
+      // const is_in_maitenance =
+      //   localConfigs!.find((item) => item.key === "is_maintenance_management")
+      //     ?.value === "true";
 
-      if (is_in_maitenance) {
-        setIsInMaintenance(true);
-        setIsLoading(false);
-        notContinue = true;
-      }
+      // if (is_in_maitenance) {
+      //   setIsInMaintenance(true);
+      //   setIsLoading(false);
+      //   notContinue = true;
+      // }
 
-      if (notContinue) return;
+      // if (notContinue) return;
 
       //Checking latest version
-      const nativeVersion = Application.nativeApplicationVersion;
+      // const nativeVersion = Application.nativeApplicationVersion;
 
-      if (Platform.OS === "android" && Platform.Version >= 21) {
-        setIsInAppUpdate(true);
-      }
+      // if (Platform.OS === "android" && Platform.Version >= 21) {
+      //   setIsInAppUpdate(true);
+      // }
 
-      let min_version;
-      let store;
-      if (Platform.OS === "android") {
-        min_version = localConfigs!.find(
-          (item) => item.key === "management_min_version_android"
-        )?.value;
-        store = localConfigs!.find(
-          (item) => item.key === "management_url_google_play"
-        )?.value;
-      } else {
-        min_version = localConfigs!.find(
-          (item) => item.key === "management_min_version_ios"
-        )?.value;
-        store = localConfigs!.find(
-          (item) => item.key === "management_url_app_store"
-        )?.value;
-      }
+      // let min_version;
+      // let store;
+      // if (Platform.OS === "android") {
+      //   min_version = localConfigs!.find(
+      //     (item) => item.key === "management_min_version_android"
+      //   )?.value;
+      //   store = localConfigs!.find(
+      //     (item) => item.key === "management_url_google_play"
+      //   )?.value;
+      // } else {
+      //   min_version = localConfigs!.find(
+      //     (item) => item.key === "management_min_version_ios"
+      //   )?.value;
+      //   store = localConfigs!.find(
+      //     (item) => item.key === "management_url_app_store"
+      //   )?.value;
+      // }
 
-      if (min_version && nativeVersion) {
-        if (semver.gt(min_version, nativeVersion)) {
-          setNeedUpdate(true);
-          setStoreUrl(store ?? "");
-          setIsLoading(false);
-          return;
-        }
-      }
+      // if (min_version && nativeVersion) {
+      //   if (semver.gt(min_version, nativeVersion)) {
+      //     setNeedUpdate(true);
+      //     setStoreUrl(store ?? "");
+      //     setIsLoading(false);
+      //     return;
+      //   }
+      // }
 
-     
+      //Configuring notifications
+      // try {
+      //   const authorizationStatus = await messaging().requestPermission();
+      //   if (
+      //     authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      //     authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+      //   ) {
+      //     let fcmToken = await messaging().getToken();
+
+      //     await APIServer.patch(`/identity/user`, {
+      //       notificationToken: fcmToken,
+      //     });
+      //   }
+      // } catch (error: any) {
+      //   crashlytics().log("Something fail while getting notification Token");
+      //   crashlytics().recordError(error);
+      // }
 
       //Checking user credentials
       setMessage("Comprobando credenciales de acceso...");
       //FIXME: Reset all store data when token refresh fails
       try {
         const session = state;
-        // console.log("session", session);
+
         if (session !== null) {
-         
-                // console.log("error", JSON.stringify(error));
-                // console.log("error", error.cause);
+          const { token }: AuthToken = session;
+          // console.log('sesseion.token :' + token);
+          await APIServer.post(`/user/refreshToken`, {
+            token,
+          })
+            .then(async (response: AxiosResponse) => {
+     
+              const refreshedTokens = {
+                token: response.data.token,
+                currentUser: response.data.currentUser
+              };
+
+              dispatch(refreshSession(refreshedTokens));
+              console.log('estes es el token refresacado'+refreshedTokens);
+            })
+            .catch((error: AxiosError) => {
+              // console.log(error.response)
+              if (error?.response?.status === 400) {
+                console.log('esta fallando el refresh token')
+                dispatch(closeSession());
+              }else if (error?.response?.status === 404) {
+                console.log('esta fallando el refresh token / ususario no encontrado');
+              
+                dispatch(closeSession());
+              }
+               else {
+             
                 setError(
                   "Upps.. No hemos podido verificar sus credenciales de acceso."
                 );
               }
-          
-        
+            });
+        }
       } catch (error: any) {
         dispatch(closeSession());
-      //  crashlytics().log("While checking access credentials");
+       // crashlytics().log("While checking access credentials");
      //   crashlytics().recordError(error);
+     console.log('error checking credencials -useinitialLoad')
       }
     } catch (error: any) {
-   //   crashlytics().log("While loading app configurations");
-   //   crashlytics().recordError(error);
+    //  crashlytics().log("While loading app configurations");
+  //    crashlytics().recordError(error);
+    console.log('while loading app config -useinitialLoad')
       setError("Opps.. Sorry, something has broken. Please try again.");
     } finally {
       setIsLoading(false);

@@ -2,8 +2,8 @@ import { StyleSheet, Image } from "react-native";
 import React from "react";
 import FastImage from "react-native-fast-image";
 
-const placeholderImage = require("../../assets/images/default.jpeg");
-const placeholderUser = require("../../assets/images/user.jpeg");
+const placeholderImage = require("../../../assets/images/Aceña.png");
+const placeholderUser = require("../../../assets/images/cardAceña.jpg");
 
 export default function AvatarComponent({
   uri,

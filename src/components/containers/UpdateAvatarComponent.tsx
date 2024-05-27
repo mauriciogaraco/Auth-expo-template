@@ -8,7 +8,7 @@ import {
 import { useCallback, useRef, useMemo } from "react";
 import { palette } from "../../theme/colors";
 import Layout from "../../utils/Layout";
-import { useUploadImageMutation } from "../../store/api/mediaApi";
+
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import {
   ImagePickerResponse,
@@ -22,6 +22,8 @@ import { useFormContext } from "react-hook-form";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import PhotoBottomSheet from "../atoms/PhotoBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useUploadImageMutation } from "../../store/api/mediaApi";
+
 
 const width = Layout.window.width;
 
@@ -112,19 +114,25 @@ export default function UpdateAvatarComponent() {
   return (
     <>
       <TouchableHighlight
-        style={styles.button}
+        style={stylesUpateAvatar.button}
         underlayColor={"#EFEFEF"}
         onPress={() => handleSnapPress(0)}
         disabled={isLoading}
       >
         <>
-          <AvatarComponent
-            size={100}
-            uri={avatar.thumbnail}
-            userPlaceholder={true}
-          />
+        <Text
+              style={{
+                fontSize: 70,
+                color: "#fff",
+                textAlign: "center",
+                justifyContent: "center",
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              {"Enameil".charAt(0).toUpperCase()}
+            </Text> 
           {isLoading ? (
-            <View style={styles.loading}>
+            <View style={stylesUpateAvatar.loading}>
               <ActivityIndicator color={palette.icons} />
             </View>
           ) : null}
@@ -156,7 +164,7 @@ export default function UpdateAvatarComponent() {
   );
 }
 
-const styles = StyleSheet.create({
+export const stylesUpateAvatar = StyleSheet.create({
   content: {
     flexDirection: "row",
     // justifyContent: "space-evenly",

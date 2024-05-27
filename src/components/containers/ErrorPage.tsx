@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, Image, Text, Platform } from "react-native";
 import { Button } from "react-native-paper";
-import { I18n } from "i18n-js";
-import englishLanguage from "../../i18n/english.json";
-import spanishLanguage from "../../i18n/spanish.json";
+///import { I18n } from "i18n-js";
+//import englishLanguage from "../../i18n/english.json";
+//import spanishLanguage from "../../i18n/spanish.json";
 
-import { ThemeContext } from "../../context/theme/ThemeContext";
+//import { ThemeContext } from "../../context/theme/ThemeContext";
 import { palette } from "../../theme/colors";
 
 interface Props {
@@ -14,11 +14,11 @@ interface Props {
 }
 
 export const ErrorPage = ({ message, onRecovery }: Props) => {
-  const { theme } = useContext(ThemeContext);
+  /* const { theme } = useContext(ThemeContext);
   const i18n = new I18n({
     en: englishLanguage,
     es: spanishLanguage,
-  });
+  });*/
 
   const error = require("../../../assets/images/error.png");
 
@@ -43,7 +43,7 @@ export const ErrorPage = ({ message, onRecovery }: Props) => {
                     {i18n.t("errorMsg")}
                 </Text> */}
         {message && (
-          <Text style={[styles.subtitle, { color: palette.secondary }]}>
+          <Text style={[styles.subtitle, { color: palette.darkGray }]}>
             {message}
           </Text>
         )}
@@ -54,10 +54,11 @@ export const ErrorPage = ({ message, onRecovery }: Props) => {
           buttonColor={palette.primary}
           style={{ marginVertical: 32 }}
           labelStyle={{
+
             fontFamily:
-              Platform.OS === "android" ? "poppins-medium" : "sf-medium",
+              Platform.OS === "android" ? "Poppins-Medium" : "sf-medium",
             marginVertical: Platform.OS === "android" ? 6 : 8,
-            color: palette.secondary,
+            color: palette.white,
           }}
         >
           Reintentar {/* {i18n.t("retry")} */}

@@ -2,15 +2,14 @@ import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
 
 import { Controller, ControllerProps } from "react-hook-form";
-import { HelperText } from "react-native-paper";
-import { palette } from "../../../theme/colors";
+
 import { FilterBarButtons } from "../FilterBarButtons";
 
 type ControlProps = Omit<ControllerProps, "render">;
 
 interface RadioButtonControllerProps {
   controller: ControlProps;
-  data: { key: any; label: string };
+  data: { key: any; label?: string };
 }
 
 export default function RadioButtonController(
@@ -32,7 +31,8 @@ export default function RadioButtonController(
             <FilterBarButtons
               isSelected={value === data.key}
               onPress={() => onChange(data.key)}
-              label={data.label}
+              label={data?.label}
+              
             />
           </>
         )}

@@ -18,8 +18,8 @@ export const globals = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: "700",
-    color: "black",
+    fontFamily:'Poppins-Medium',
+    color: "#fff",
     // textTransform: "capitalize",
   },
   container: {
@@ -46,19 +46,21 @@ export const globals = StyleSheet.create({
     borderRadius: 100,
   },
   search: {
-    width: "100%",
+    marginVertical:10,
     // flex: 1
     backgroundColor: palette.white,
-    borderColor: palette.datesFilter,
+    borderColor: palette.icons,
+    borderRadius:10,
     alignItems: "center",
     // alignSelf: "center",
     justifyContent: "center",
     height: 42,
     padding: 0,
-    marginBottom: 2,
+    marginBottom: 22,
     borderWidth: 1,
   },
   searchInput: {
+    
     fontSize: 15,
     alignItems: "center",
     alignSelf: "center",

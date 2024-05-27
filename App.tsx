@@ -1,12 +1,11 @@
-
 import "react-native-gesture-handler";
 import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import AppEntry from './AppEntry';
+import AppEntry from "./AppEntry";
 //import { store}  from './Redux/root';
 import { Provider } from "react-redux";
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 
 //import { StatusBar } from 'expo-status-bar';
@@ -16,20 +15,16 @@ import { persistStore } from "redux-persist";
 
 import { store } from "./src/store/root";
 import { injectStore } from "./src/services/APIServer";
-import { injectMediaStore } from "./src/services/APIMediaServer";
-
-
-
+import { PaperProvider } from "react-native-paper";
+import { ThemeProvider } from "./src/Context/theme/ThemeContext";
+import { CombinedLightTheme } from "./src/theme/colors";
 /*
 import { Navigator } from './src/Navigator/Navigator';
 import * as Font from 'expo-font' */
-
-
+injectStore(store);
 
 export default function App() {
-
-
-//Disable font scaling
+  //Disable font scaling
   //@ts-ignore
   Text.defaultProps = Text.defaultProps || {};
   //@ts-ignore
@@ -46,37 +41,44 @@ export default function App() {
     initialLoad();
   }, []);
 
-  injectStore(store);
-  injectMediaStore(store);
-  
   const persistor = persistStore(store);
-  
-  return (/*
+
+  return (
+    /*
     <NavigationContainer>
     <Navigator/>
 </NavigationContainer>*/
 
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-      <AppEntry />
+    <Provider store={store}>
+      <PersistGate persistor={persistor} loading={<LoadingPage title="" />}>
+        {/* <StatusBar
+style="dark"
+backgroundColor="#FFFFFF"
+animated={true}
+translucent={false}
+/> */}
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <PaperProvider theme={CombinedLightTheme}>
+              <AppEntry />
+            </PaperProvider>
+          </ThemeProvider>
+        </SafeAreaProvider>
       </PersistGate>
-      </Provider>
- 
+    </Provider>
   );
 }
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-
 });
 
-
- /*
+/*
      const [fontLoaded, setfontLoaded] = useState(false);
 
 useEffect(() => {

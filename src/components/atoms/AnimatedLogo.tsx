@@ -1,43 +1,37 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, Animated, Easing } from "react-native";
 import React from "react";
-import { View } from "moti";
+import { View, MotiImage } from "moti";
 import { palette } from "../../theme/colors";
-import Layout from "../utils/Layout";
 
-const logoSize = Layout.window.width * 0.2;
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+
+const imageSize = width * 0.3;
+const logoSize = width * 0.2;
 const logoPiecesSize = logoSize / 2.5;
 
 export default function AnimatedLogo() {
   return (
     <View style={styles.logoContainer}>
-      <View
-        transition={{ delay: 200, type: "timing", loop: true }}
-        animate={{
-          opacity: [0.5, 1, 1, 1],
+      <MotiImage
+        source={require("../../../assets/logo-w - copia.png")}
+        from={{
+          rotate: "0deg",
         }}
-        style={[styles.square, styles.logoPiece]}
-      />
-      <View
-        transition={{ delay: 200, type: "timing", loop: true }}
         animate={{
-          // opacity: [{ value: 0.4, delay: 1000 }],
-          opacity: [1, 0.5, 1, 1],
+          rotate: "360deg",
         }}
-        style={[styles.square, styles.logoPiece]}
-      />
-      <View
-        transition={{ delay: 200, type: "timing", loop: true }}
-        animate={{
-          opacity: [1, 1, 1, 0.5],
+        transition={{
+          loop: true,
+          repeatReverse: false,
+          type: "timing",
+          duration: 3000,
         }}
-        style={[styles.square, styles.logoPiece]}
-      />
-      <View
-        transition={{ delay: 200, type: "timing", loop: true }}
-        animate={{
-          opacity: [1, 1, 0.5, 1],
-        }}
-        style={[styles.circle, styles.logoPiece]}
+        // animate={{
+        //   // translateX: 6,
+        //   rotate: ["0deg", "90deg", "180deg", "270deg", "0deg"],
+        // }}
+        style={[styles.logo]}
       />
     </View>
   );
@@ -63,12 +57,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
   },
+  logo: {
+    height: imageSize,
+    width: imageSize,
+    marginLeft: -15,
+  },
   logoPiece: { height: logoPiecesSize, width: logoPiecesSize },
   square: {
     backgroundColor: palette.secondary,
   },
   circle: {
-    backgroundColor: palette.logo,
+    backgroundColor: palette.primary,
     borderRadius: 100,
   },
   animatedOpacity: {
@@ -80,3 +79,46 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 });
+
+// export const AnimatedLogo = React.memo(() => {
+//   const fadeInValue = new Animated.Value(0);
+//   const spinValue = new Animated.Value(0);
+
+//   Animated.sequence([
+//     Animated.delay(1000),
+//     Animated.timing(fadeInValue, {
+//       toValue: 1,
+//       duration: 1500,
+//       easing: Easing.linear,
+//       useNativeDriver: true,
+//     }),
+//   ]).start();
+
+//   Animated.loop(
+//     Animated.timing(spinValue, {
+//       toValue: 360,
+//       duration: 300000,
+//       easing: Easing.linear,
+//       useNativeDriver: true,
+//     })
+//   ).start();
+
+//   return (
+//     <Animated.View
+//       style={{
+//         opacity: fadeInValue,
+//         transform: [{ rotate: spinValue }],
+//       }}
+//     >
+//       <Image
+//         source={require("../../../assets/logo-w-copia.png")}
+//         transition={{ delay: 100, type: "timing", loop: true }}
+//         animate={{
+//           translateX: 6,
+//           rotate: ["180deg", "360deg"],
+//         }}
+//         style={[styles.logo]}
+//       />
+//     </Animated.View>
+//   );
+// });

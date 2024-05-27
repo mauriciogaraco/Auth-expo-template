@@ -1,21 +1,19 @@
 //import crashlytics from "@react-native-firebase/crashlytics";
 import { api } from "./api";
 import { closeSession, setSessionTokens } from "../slices/systemSlice";
+import { Image} from '../../services/Interfaces';
 import {
- 
-  TicketResponse,
-  User,
-
-
+  AuthToken,User,
 } from "../../services/Interfaces";
-import { RootState } from "../root";
-import { AuthToken } from '../../services/Interfaces';
+//import crashlytics from "@react-native-firebase/crashlytics";
 import {
-  EditUserDataInterface,
-  GlobalDataInterface,
-  LoginArgs,
-  MeasureInterface,
+  LoginArgs,  
 } from "../intefaces";
+
+interface LoadInitialData {
+  User : User
+}
+
 
 export const authApi = api.injectEndpoints({
   endpoints(build) {
@@ -28,29 +26,61 @@ export const authApi = api.injectEndpoints({
               method: "POST",
               data: arg,
             });
-            if (authToken.data) {
-             // const tokens = authToken.data as AuthToken;
-             const sessiontoken = authToken.data 
-              dispatch(setSessionTokens(authToken.data));
             
+            if (authToken.data) {
+              const tokens = authToken.data as AuthToken;
+              dispatch(setSessionTokens(tokens));
+             
               return { data: true };
-
+              
             }
             return { error: authToken.error };
           } catch (error) {
-          //  crashlytics().log("Something failed while logging in the user");
-           // crashlytics().recordError(error as any);
-           console.log(error);
-            return { error: error };
+             console.log(error);
+             console.log('error while loggin user')
+//crashlytics().log("Something failed while logging in the user");
+          //  crashlytics().recordError(error as any);
+
+   return { error: error };
           }
         },
         invalidatesTags: (result) => (result ? ["UNAUTHORIZED"] : []),
       }),
+
+        
+      register: build.mutation<boolean, LoginArgs>({
+        async queryFn(arg, { dispatch }, extraOptions, baseQuery) {
+          try {
+            const authToken = await baseQuery({
+              url:   "/user/register",
+              method: "POST",
+              data: arg,
+            });
+            
+            if (authToken.data) {
+              
+              
+              return { data: false };
+             
+            }
+            return { error: authToken.error };
+          } catch (error) {
+            
+          //  crashlytics().log("Something failed while register  the user");
+         //   crashlytics().recordError(error as any);
+
+
+   return { error: error };
+          }
+        },
+        invalidatesTags: (result) => (result ? ["UNAUTHORIZED"] : []),
+      }),
+      
       logOut: build.mutation<null, void>({
         async queryFn(arg, { dispatch }, extraOptions, baseQuery) {
           try {
             const authToken = await baseQuery({
-              url: "/identity/logout",
+              url: "/user/logout",
               data: {},
               method: "POST",
             });
@@ -58,9 +88,9 @@ export const authApi = api.injectEndpoints({
             return { error: authToken.error };
           } catch (error) {
             dispatch(closeSession());
-          //  crashlytics().log("Something failed while logging in the user");
-            //crashlytics().recordError(error as any);
-            console.log(error);
+          //  crashlytics().log("Something failed while logout  the user");
+          //  crashlytics().recordError(error as any);
+            
             return { error: error };
           }
         },
@@ -68,7 +98,7 @@ export const authApi = api.injectEndpoints({
       }),
      logout: build.mutation<null, void>({
         query: () => ({
-          url: "/identity/logout",
+          url: "/user/logout",
           data: {},
           method: "POST",
         }),
@@ -78,57 +108,57 @@ export const authApi = api.injectEndpoints({
         queryFn: () => ({ data: null })
        
       }) ,
-    
-      getUser: build.query({
+   
+      getMyUser: build.query<User,void>({
         query: () => ({
-          url: `/identity/security/user`,
+          url: `/user/myuser`,
           method: "GET",
         }),
         providesTags: ["User"],
       }),
-
-      getAllTickets: build.query<TicketResponse, void>({
-        query: () => ({
-          url: `/ticket/all`,
-          method: "GET",
-        }),
-        providesTags: ["User"],
-      }),
-
-    /*  getBusiness: build.query<Business, void>({
-        query: () => ({
-          url: `/administration/my-business`,
-          method: "GET",
-        }),
-        providesTags: ["Business"],
-      }),*/
-     /* getBranches: build.query({
-        query: () => ({
-          url: `/administration/my-branches`,
-          method: "GET",
-        }),
-        providesTags: ["Branch"],
-      }),    */
+ 
       refreshToken: build.mutation({
         query: (token) => ({
-          url: `/identity/refresh-token`,
+          url: `/user/refreshToken`,
           data: { refresh_token: token },
           method: "POST",
+        
         }),
+        
         invalidatesTags: ["Session"],
+        
       }),
-      editUser: build.mutation<User, EditUserDataInterface>({
+      loadInitialData: build.query<LoadInitialData, void>({
+        //@ts-ignore
+        async queryFn(arg, api, extraOptions, baseQuery) {
+          return await Promise.all([
+            baseQuery({
+              url: `/user/myuser`,
+              method: "GET",
+            }),
+          ])
+            .then((res) => {
+              return {
+                data: {
+                  user: res[0]?.data as User,
+                },
+              };
+            })
+            .catch((err) => ({ error: err }));
+          
+        },
+        providesTags: ["Session"],
+      }),
+     
+    /*   uploadImage: build.mutation<Array<Image>, any>({
         query: (data) => ({
-          url: `/identity/security/user`,
+          url: `/file/user`,
           data: data,
-          method: "PATCH",
+          method: "POST",
         }),
         invalidatesTags: ["User"],
-      }),
-      refetchErroredQueries: build.mutation<null, void>({
-        queryFn: () => ({ data: null }),
-        invalidatesTags: ["UNKNOWN_ERROR"],
-      }),
+      }),*/
+    
     };
   },
   overrideExisting: true,
@@ -136,8 +166,13 @@ export const authApi = api.injectEndpoints({
 
 export const {
   useLoginMutation,
-  useGetAllTicketsQuery,
+  useGetMyUserQuery,
   useLogoutMutation,
+  useLogOutMutation,
   useRefreshTokenMutation,
-  useEditUserMutation,
+ 
+ useLazyLoadInitialDataQuery,
+  useRegisterMutation,
+
+ // useUploadImageMutation
 } = authApi;

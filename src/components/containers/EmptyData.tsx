@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, StyleSheet, Image, Text, Platform } from "react-native";
 import { Button } from "react-native-paper";
 
-import { ThemeContext } from "../../context/theme/ThemeContext";
+//import { ThemeContext } from "../../context/theme/ThemeContext";
 
 interface Props {
   type: "logo";
@@ -13,7 +13,7 @@ interface Props {
 
 export const EmptyData = ({ type, title, subtitle, onPress }: Props) => {
   const logo = require("../../../assets/images/error.png");
-  const { theme } = useContext(ThemeContext);
+  // const { theme } = useContext(ThemeContext);
 
   let image;
   switch (type) {

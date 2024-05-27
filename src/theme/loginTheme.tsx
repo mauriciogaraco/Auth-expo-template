@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { palette } from './colors';
 
  export const loginStyles = StyleSheet.create({
 inputField : {
@@ -30,15 +31,16 @@ btnText:{
     fontSize:16
 },
 btnRegisterText:{
-    color:'#023E88',
-    fontSize:20,
-    marginTop:5
+    color:palette.primary,
+    fontSize:16,
+    fontFamily:'Poppins-Medium',
+    marginHorizontal:10,
+    marginVertical:15
 },
 newUserContainer:{
     alignItems:'center',
-    marginTop:20,
-    
-    
+    marginTop:30,
+    flexDirection:'row'
 },
 
 })

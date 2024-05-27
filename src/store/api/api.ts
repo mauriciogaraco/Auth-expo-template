@@ -35,10 +35,11 @@ const axiosBaseQuery: BaseQueryFn<AxiosArgs, unknown, unknown> = async ({
     return { data: result.data };
   } catch (axiosError) {
     let err = axiosError as AxiosError;
+      
     return {
       error: {
         status: err.response?.status,
-        data: (err.response?.data as any).message,
+        data: (err.response?.data as any).msg
       },
     };
   }
@@ -47,13 +48,7 @@ const axiosBaseQuery: BaseQueryFn<AxiosArgs, unknown, unknown> = async ({
 export const api = createApi({
   reducerPath: "api",
   baseQuery: axiosBaseQuery,
-  tagTypes: [
-    "User",
-    "Session",
-    "Dispatch",
-    "UNAUTHORIZED",
-    "UNKNOWN_ERROR",
-  ],
+  tagTypes: ["User", "Session", "Dispatch", "UNAUTHORIZED", "UNKNOWN_ERROR,Register","Product" , "Tickets"],
   endpoints: () => ({}),
   keepUnusedDataFor: 30,
 });

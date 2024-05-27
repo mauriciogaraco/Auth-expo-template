@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
-import { useAnimation } from "../../hooks/useAnimation";
+//import { useAnimation } from "../../hooks/useAnimation";
 import { StatusBar } from "expo-status-bar";
+
+import { palette } from "../../theme/colors";
 import AnimatedLogo from "../atoms/AnimatedLogo";
 
 interface Props {
@@ -17,11 +19,11 @@ export const LoadingPage = ({ title, subtitle }: Props) => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#FFC305",
+        backgroundColor: palette.primary,
       }}
     >
-      <StatusBar backgroundColor="#FFC305" translucent={false} />
-      <AnimatedLogo />
+      <StatusBar backgroundColor={palette.primary} translucent={false} />
+      {/* <AnimatedLogo /> */}
       {/* <Animated.Image
         source={logo_color}
         resizeMode={"contain"}

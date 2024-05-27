@@ -33,14 +33,18 @@ export default function TextInputController(props: TextInputControllerProps) {
               onChangeText={onChange}
               onBlur={onBlur}
               outlineStyle={{
-                borderRadius: 50,
+                borderRadius: 40,
                 backgroundColor: palette.white,
               }}
               placeholderTextColor={palette.icons}
               mode="outlined"
               outlineColor={palette.icons}
               activeOutlineColor={palette.primary}
-              contentStyle={{ fontWeight: "600", fontSize: 15 }}
+              contentStyle={{
+                fontWeight: "600",
+                fontSize: 15,
+                borderRadius: 0,
+              }}
               autoCapitalize="none"
               style={{
                 borderColor: palette.icons,
@@ -52,7 +56,11 @@ export default function TextInputController(props: TextInputControllerProps) {
             <HelperText
               type="error"
               visible={Boolean(error)}
-              style={{ color: palette.red, height: error ? "auto" : 10 }}
+              style={{
+                color: palette.red,
+                height: error ? "auto" : 10,
+                textAlign: "center",
+              }}
             >
               {error?.message}
             </HelperText>
